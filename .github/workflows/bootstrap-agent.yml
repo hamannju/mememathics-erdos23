@@ -1,6 +1,8 @@
 name: Materialize Erdős 23 campaign branch
 
 on:
+  issues:
+    types: [opened]
   push:
     branches: ["main"]
     paths:
@@ -11,6 +13,7 @@ permissions:
 
 jobs:
   materialize:
+    if: github.event_name == 'push' || github.event.issue.title == 'bootstrap: materialize campaign'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
