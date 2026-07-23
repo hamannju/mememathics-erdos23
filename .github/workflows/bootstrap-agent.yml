@@ -1,0 +1,32 @@
+name: Materialize Erdős 23 campaign branch
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - ".github/workflows/bootstrap-agent.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent/bootstrap-campaign
+          fetch-depth: 0
+      - name: Extract verified snapshot
+        run: python .bootstrap/extract.py
+      - name: Remove transport files and branch bootstrap workflow
+        run: |
+          rm -rf .bootstrap
+          rm -f .github/workflows/bootstrap.yml
+      - name: Commit snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Bootstrap reproducible Erdős 23 campaign"
+          git push origin HEAD:agent/bootstrap-campaign
