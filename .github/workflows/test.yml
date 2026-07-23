@@ -1,0 +1,33 @@
+name: Test exact Gamma tooling
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install
+        run: python -m pip install -e '.[dev]'
+      - name: Unit tests
+        run: pytest
+      - name: Tau falsifier replay
+        run: PYTHONPATH=src python scripts/verify_tau_counterexample.py
+      - name: Graph Atlas audit
+        run: |
+          PYTHONPATH=src python scripts/enumerate_atlas_gamma.py \
+            --maximum-order 7 \
+            --output /tmp/atlas-bipartite-n7.json
+          sha256sum /tmp/atlas-bipartite-n7.json
