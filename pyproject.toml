@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mememathics-erdos23"
+version = "0.2.0"
+description = "Reproducible computational research on Erdős Problem #23"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "networkx>=3.4,<4",
+  "numpy>=2.0,<3",
+  "scipy>=1.14,<2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+testpaths = ["tests"]
